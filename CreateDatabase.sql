@@ -627,7 +627,7 @@ VALUES
 
 INSERT INTO `testh`.`furniture` (`id_fur`, `name_fur`, `price_fur`, `status_fur`, `roomNumber`) 
 VALUES 
-('FU00296', 'Bàn làm việc', '2000000', '1', '110H1'),
+('FU00296', 'Bàn làm việc', '2000000', '0', '110H1'),
 ('FU00297', 'Bàn làm việc', '2000000', '1', '111H1'),
 ('FU00298', 'Bàn làm việc', '2000000', '1', '112H1'),
 ('FU00299', 'Bàn làm việc', '2000000', '1', '113H1'),

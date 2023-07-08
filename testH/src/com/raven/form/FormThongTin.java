@@ -1,0 +1,676 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package com.raven.form;
+
+import Controller.BillControl;
+import Controller.BookRoomControl;
+import Controller.FurnitureControl;
+import Controller.ServiceControl;
+import Controller.TypeServiceControl;
+import Model.Furniture;
+import Model.InforGuest;
+import Model.Service;
+import java.awt.MenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Action;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author NGUYEN PHUC NAM
+ */
+public class FormThongTin extends javax.swing.JFrame {
+
+    DefaultTableModel modelService;
+    DefaultTableModel modelGuest;
+    DefaultTableModel modelFur;
+    DefaultTableModel modelUsedService;
+    String mob;
+
+    /**
+     * Creates new form FormCheckIn
+     */
+    public FormThongTin() {
+        initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
+        modelService = (DefaultTableModel) jTableService.getModel();
+        modelGuest = (DefaultTableModel) jTableKH.getModel();
+        modelFur = (DefaultTableModel) jTableTB.getModel();
+        modelUsedService = (DefaultTableModel) jTableSVU.getModel();
+        for (String s : TypeServiceControl.getListNameTypeService()) {
+            jComboBox1.addItem(s);
+        }
+        showService();
+    }
+
+    public FormThongTin(String name) {
+        initComponents();
+        modelService = (DefaultTableModel) jTableService.getModel();
+        modelGuest = (DefaultTableModel) jTableKH.getModel();
+        modelFur = (DefaultTableModel) jTableTB.getModel();
+        modelUsedService = (DefaultTableModel) jTableSVU.getModel();
+        for (String s : TypeServiceControl.getListNameTypeService()) {
+            jComboBox1.addItem(s);
+        }
+        showService();
+        showUS(name.substring(6));
+        showF(name.substring(6));
+        showG(name.substring(6));
+
+    }
+
+    public void showService() {
+        for (Service s : TypeServiceControl.getListService()) {
+            modelService.addRow(new Object[]{
+                s.getName_tSer(), s.getName(), s.getPrice()
+            });
+        }
+    }
+
+    public void showFoundService(String name_tSer) {
+        for (Service s : TypeServiceControl.getListFoundService(name_tSer)) {
+            modelService.addRow(new Object[]{
+                s.getName_tSer(), s.getName(), s.getPrice()
+            });
+        }
+    }
+
+    public void showG(String roomNumber) {
+        for (InforGuest s : BookRoomControl.getListInforGuests(roomNumber)) {
+            if (s.getGender() == 1) {
+                modelGuest.addRow(new Object[]{
+                    s.getId_guest(), s.getName(), s.getBirthday(), "Nam", s.getPhone(), s.getId_card(), s.getStartTime(), s.getEndTime()
+                });
+            } else {
+                modelGuest.addRow(new Object[]{
+                    s.getId_guest(), s.getName(), s.getBirthday(), "Nữ", s.getPhone(), s.getId_card(), s.getStartTime(), s.getEndTime()
+                });
+            }
+
+        }
+    }
+
+    public void showF(String roomNumber) {
+        for (Furniture s : FurnitureControl.getListFurInRoom(roomNumber)) {
+            if (s.getStatus() == 1) {
+                modelFur.addRow(new Object[]{
+                    s.getId(), s.getName(), s.getPrice(), "Bình Thường"
+                });
+            } else {
+                modelFur.addRow(new Object[]{
+                    s.getId(), s.getName(), s.getPrice(), "Hỏng"
+                });
+            }
+
+        }
+    }
+
+    public void showUS(String roomNumber) {
+        for (Service s : ServiceControl.getListUsedService(BillControl.getIdBill(roomNumber))) {
+            modelUsedService.addRow(new Object[]{
+                s.getName_tSer(), s.getName(), s.getQuantity()
+            });
+        }
+    }
+
+    public void MaintenanceOrBroken(String s) {
+        int cf = JOptionPane.showConfirmDialog(null,
+                "Bạn có muốn " + s + " không?", "Xác Nhận", JOptionPane.YES_NO_OPTION);
+        if (cf == 0) {
+            if (BillControl.getIdBill(this.getName().substring(6)).equals("")) {
+                JOptionPane.showMessageDialog(null, "Hiện tại không có ai sử dụng phòng");
+                return;
+            }
+            FurnitureControl.SetToBroken(jTableTB.getValueAt(jTableTB.getSelectedRow(), 0).toString(),
+                    BillControl.getIdBill(this.getName().substring(6)));
+            while (modelFur.getRowCount() != 0) {
+                modelFur.removeRow(0);
+            }
+            showF(this.getName().substring(6));
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        BaoHong = new javax.swing.JMenuItem();
+        jDialog1 = new javax.swing.JDialog();
+        jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jlabelRoomNumber = new javax.swing.JLabel();
+        jTabbedPane3 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableKH = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTableService = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableTB = new javax.swing.JTable();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTableSVU = new javax.swing.JTable();
+
+        BaoHong.setText("Báo Hỏng");
+        BaoHong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BaoHongActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(BaoHong);
+
+        jDialog1.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jLabel3.setText("Chọn số lượng");
+
+        jButton1.setText("Đặt");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1))
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                formPropertyChange(evt);
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel1.setForeground(new java.awt.Color(204, 204, 255));
+
+        jPanel2.setBackground(new java.awt.Color(153, 204, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel4.setBackground(new java.awt.Color(199, 96, 136));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel4.setForeground(new java.awt.Color(0, 204, 102));
+
+        jlabelRoomNumber.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jlabelRoomNumber.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlabelRoomNumber.setText("PHÒNG");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jlabelRoomNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jlabelRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 120, -1));
+
+        jTableKH.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Mã Khách hàng", "Tên Khách Hàng", "Ngày Sinh", "Giới Tính", "SĐT", "CCCD", "Ngày Bắt Đầu Thuê", "Ngày Dự Kiến Trả"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableKH.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableKHMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableKH);
+        if (jTableKH.getColumnModel().getColumnCount() > 0) {
+            jTableKH.getColumnModel().getColumn(0).setMaxWidth(100);
+            jTableKH.getColumnModel().getColumn(3).setMaxWidth(60);
+            jTableKH.getColumnModel().getColumn(4).setMaxWidth(170);
+        }
+
+        jTabbedPane3.addTab("Khách Hàng", jScrollPane1);
+
+        jPanel2.add(jTabbedPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 820, 250));
+
+        jPanel5.setBackground(new java.awt.Color(199, 96, 136));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel5.setForeground(new java.awt.Color(0, 204, 102));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Thông tin khách hàng");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 820, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel2.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 830, -1));
+
+        jLabel2.setText("Các Loại Dịch Vụ :");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 393, -1, -1));
+
+        jPanel7.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel7.setForeground(new java.awt.Color(102, 0, 255));
+
+        jLabel1.setText("Thêm Dịch Vụ");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+        );
+
+        jPanel2.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 80, 30));
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất Cả" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 390, -1, -1));
+
+        jScrollPane4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jScrollPane4MouseEntered(evt);
+            }
+        });
+
+        jTableService.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Loại dịch Vụ", "Tên dịch vụ", "Giá"
+            }
+        ));
+        jTableService.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableServiceMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jTableServiceMouseEntered(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTableService);
+
+        jPanel2.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 810, 180));
+
+        jPanel3.setBackground(new java.awt.Color(153, 204, 255));
+
+        jTableTB.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Mã", "Tên Thiết Bị", "Giá tiền", "Tình Trạng"
+            }
+        ));
+        jTableTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableTBMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTableTB);
+
+        jTabbedPane2.addTab("Thiết bị", jScrollPane2);
+
+        jPanel6.setBackground(new java.awt.Color(199, 96, 136));
+        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jPanel6.setForeground(new java.awt.Color(0, 204, 102));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Thông tin Dịch vụ & Thiết bị");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jTableSVU.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Loại", "Tên", "Số Lượng"
+            }
+        ));
+        jScrollPane3.setViewportView(jTableSVU);
+
+        jTabbedPane1.addTab("Dịch vụ", jScrollPane3);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 16, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 831, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void formPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_formPropertyChange
+        // TODO add your handling code here:
+        jlabelRoomNumber.setText(this.getName());
+    }//GEN-LAST:event_formPropertyChange
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        // TODO add your handling code here:
+        while (modelService.getRowCount() != 0) {
+            modelService.removeRow(0);
+        }
+        if (jComboBox1.getSelectedItem().equals("Tất Cả")) {
+            showService();
+        } else {
+            showFoundService(jComboBox1.getSelectedItem().toString());
+        }
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jScrollPane4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane4MouseEntered
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jScrollPane4MouseEntered
+
+    private void jTableServiceMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableServiceMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableServiceMouseEntered
+
+    private void jTableServiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableServiceMouseClicked
+        // TODO add your handling code here:
+        jDialog1.setLocationRelativeTo(null);
+        jDialog1.setTitle("Số Lượng");
+        jDialog1.setSize(250, 150);
+        jDialog1.setVisible(true);
+    }//GEN-LAST:event_jTableServiceMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            int x = Integer.parseInt(jTextField1.getText());
+            if (x <= 0) {
+                JOptionPane.showMessageDialog(null, "Số lượng không hợp lệ!");
+                return;
+            }
+            if (BillControl.getIdBill(this.getName().substring(6)).equals("")) {
+                JOptionPane.showMessageDialog(null, "Hiện tại không có ai sử dụng phòng không thể gọi dịch vụ");
+                return;
+            }
+            BillControl.addToBill_Service(BillControl.getIdBill(this.getName().substring(6)), ServiceControl.getIdService(jTableService.getValueAt(jTableService.getSelectedRow(), 1).toString()), x);
+            while (modelUsedService.getRowCount() != 0) {
+                modelUsedService.removeRow(0);
+            }
+            showUS(this.getName().substring(6));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Số lượng không gồm chữ cái và kí tự");
+        }
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTableTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTBMouseClicked
+        // TODO add your handling code here:
+        jPopupMenu1.show(jTableTB, evt.getX(), evt.getY());
+    }//GEN-LAST:event_jTableTBMouseClicked
+
+    private void BaoHongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BaoHongActionPerformed
+        // TODO add your handling code here:
+        int cf = JOptionPane.showConfirmDialog(null,
+                "Bạn có muốn báo hỏng không?", "Xác Nhận", JOptionPane.YES_NO_OPTION);
+        if (cf == 0) {
+            if (BillControl.getIdBill(this.getName().substring(6)).equals("")) {
+                JOptionPane.showMessageDialog(null, "Hiện tại không có ai sử dụng phòng");
+                return;
+            }
+            FurnitureControl.SetToBroken(jTableTB.getValueAt(jTableTB.getSelectedRow(), 0).toString(),
+                    BillControl.getIdBill(this.getName().substring(6)));
+            while (modelFur.getRowCount() != 0) {
+                modelFur.removeRow(0);
+            }
+            showF(this.getName().substring(6));
+        }
+    }//GEN-LAST:event_BaoHongActionPerformed
+
+    private void jTableKHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKHMouseClicked
+        // TODO add your handling code here:
+        JPopupMenu datphongJPopupMenu = new JPopupMenu();
+        JMenuItem m = new JMenuItem("Hủy đặt phòng");
+        ActionListener a = (e) -> {
+            int cf = JOptionPane.showConfirmDialog(null,
+                "Bạn có muốn hủy đặt phòng không?", "Xác Nhận", JOptionPane.YES_NO_OPTION);
+        if (cf == 0) {
+            int check = BookRoomControl.CancellBookRoom(jTableKH.getValueAt(jTableKH.getSelectedRow(), 0).toString(),
+                    this.getName().substring(6), jTableKH.getValueAt(jTableKH.getSelectedRow(), 6).toString());
+            switch (check) {
+                case 1 -> {
+                    modelGuest.removeRow(jTableKH.getSelectedRow());
+                    JOptionPane.showMessageDialog(null, "Hủy Đặt Phòng Thành Công");
+                    
+                }
+                case -2 -> {
+                    JOptionPane.showMessageDialog(null, "Không thể Hủy Khi Có Khách Hàng Đang Thuê");
+                }
+                case -1 -> {
+                    JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi!");
+                }
+                
+            }
+        }
+            
+        };
+        m.addActionListener(a);
+        datphongJPopupMenu.add(m);
+        datphongJPopupMenu.show(jTableKH, evt.getX(), evt.getY());
+    }//GEN-LAST:event_jTableKHMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormThongTin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormThongTin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormThongTin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormThongTin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FormThongTin().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem BaoHong;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JTable jTableKH;
+    private javax.swing.JTable jTableSVU;
+    private javax.swing.JTable jTableService;
+    private javax.swing.JTable jTableTB;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jlabelRoomNumber;
+    // End of variables declaration//GEN-END:variables
+}

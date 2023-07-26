@@ -127,6 +127,7 @@ public class BillControl {
         ConnectionProvider.closeConnection(conn);
         return null;
     }
+
     public static Bill Checkout(String datetime, String roomNumber, String id_emp) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
 
@@ -168,6 +169,7 @@ public class BillControl {
         ConnectionProvider.closeConnection(conn);
         return null;
     }
+
     public static String getNameGuestByBill(String id_bill) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
         String sql = "select g.name_guest from bill as b "
@@ -277,67 +279,41 @@ public class BillControl {
         }
         ConnectionProvider.closeConnection(conn);
     }
-    public static int RoomCharge(String id_bill, int checkinHour, int checkOutHour){
+
+    public static int RoomCharge(String id_bill, int checkinHour, int checkOutHour) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
-        String s = "select tr.price_tRoom * (rr.endTime - rr.startTime) as sum from bill as b "
+        int sum = 0;
+        int price = 0;
+        String s = "select tr.price_tRoom,tr.price_tRoom * (rr.endTime - rr.startTime) as sum from bill as b "
                 + "join room_reservation rr on b.idroom_reservation = rr.idroom_reservation "
                 + "join room r on rr.roomNumber = r.roomNumber "
                 + "join typeroom tr on tr.id_tRoom = r.id_tRoom "
-                + "where id_bill = ? and time_checkout < endTime";
+                + "where id_bill = ? ";
         try {
             PreparedStatement p = conn.prepareStatement(s);
             p.setString(1, id_bill);
             ResultSet rs = p.executeQuery();
             if (rs.next()) {
-                int sum = rs.getInt("sum");
+                sum = rs.getInt("sum");
+                price = rs.getInt("price_tRoom");
                 ConnectionProvider.closeConnection(conn);
-                return sum;
             }
         } catch (SQLException ex) {
             Logger.getLogger(BillControl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        String sql = "select tr.price_tRoom * (rr.endTime - rr.startTime) as sum from bill as b "
-                + "join room_reservation rr on b.idroom_reservation = rr.idroom_reservation "
-                + "join room r on rr.roomNumber = r.roomNumber "
-                + "join typeroom tr on tr.id_tRoom = r.id_tRoom "
-                + "where id_bill = ?";
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, id_bill);
-            ResultSet rs = ps.executeQuery();
-            String sql1 = "select tr.price_tRoom * (rr.endTime - rr.startTime + 0.5) as sum from bill as b "
-                + "join room_reservation rr on b.idroom_reservation = rr.idroom_reservation "
-                + "join room r on rr.roomNumber = r.roomNumber "
-                + "join typeroom tr on tr.id_tRoom = r.id_tRoom "
-                + "where id_bill = ?";
-            if (rs.next()) {
-                if (checkinHour < 12 || checkinHour > 13 ||checkOutHour > 11) {
-                    PreparedStatement ps1 = conn.prepareStatement(sql1);
-                    ps1.setString(1, id_bill);
-                    ResultSet rs1 = ps1.executeQuery();
-                    if (rs1.next()) {
-                        int sum = rs1.getInt("sum");
-                        ConnectionProvider.closeConnection(conn);
-                        return sum;
-                    }
-                } else {
-                    int sum = rs.getInt("sum");
-                    ConnectionProvider.closeConnection(conn);
-                    return sum;
-                }
-            } else {
-                ConnectionProvider.closeConnection(conn);
-                return 0;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(BillControl.class.getName()).log(Level.SEVERE, null, ex);
+        if (checkinHour >= 14 && checkOutHour <= 12) {
+            
+        } else if ((checkinHour >= 9 && checkinHour < 14) || (checkOutHour > 12 && checkOutHour <= 15)) {
+            sum += price*0.3;
+        } else if ((checkinHour >= 5 && checkinHour < 9) || (checkOutHour > 15 && checkOutHour <= 18)) {
+            sum += price*0.5;
+        } else {
+            sum+= price;
         }
-        ConnectionProvider.closeConnection(conn);
-        return 0;
+        return sum;
     }
-    
-    public static int ServiceCharge(String id_bill){
+
+    public static int ServiceCharge(String id_bill) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
         String sql = "select sum(price_ser * quantity) as sum from bill as b "
                 + "join bill_service as bs on b.id_bill = bs.id_bill "
@@ -355,14 +331,15 @@ public class BillControl {
                 ConnectionProvider.closeConnection(conn);
                 return 0;
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(BillControl.class.getName()).log(Level.SEVERE, null, ex);
         }
         ConnectionProvider.closeConnection(conn);
         return 0;
     }
-    public static int DamageCharge(String id_bill){
+
+    public static int DamageCharge(String id_bill) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
         String sql = "select sum(price_fur) as sum from bill as b "
                 + "join bill_furniture as bf on b.id_bill = bf.id_bill "
@@ -377,14 +354,15 @@ public class BillControl {
             } else {
                 return 0;
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(BillControl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return 0;
     }
-    public static String getTimeReserve(String id_bill){
+
+    public static String getTimeReserve(String id_bill) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
         String sql = "select * from bill as b "
                 + "join room_reservation as rr on b.idroom_reservation = rr.idroom_reservation "
@@ -394,13 +372,13 @@ public class BillControl {
             ps.setString(1, id_bill);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getString("startTime")+ " -> " + rs.getString("endTime");
+                return rs.getString("startTime") + " -> " + rs.getString("endTime");
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(BillControl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return "";
     }
 }

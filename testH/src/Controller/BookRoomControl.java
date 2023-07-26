@@ -91,6 +91,7 @@ public class BookRoomControl {
             Logger.getLogger(BookRoomControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     //check out thanh cong
     public static void setStatusToMaintenance(String roomNumber) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
@@ -106,29 +107,24 @@ public class BookRoomControl {
         }
     }
 
-    public static ArrayList<String> getListRoomNumBerUnFit(String startTime, String endTime) {
+    public static ArrayList<String> getListRoomNumBerUnFit(String startTime, String endTime) {//tat ca
         ArrayList<String> list = new ArrayList<>();
         java.sql.Connection conn = ConnectionProvider.getConnection();
         String sql = "select roomNumber from room_reservation as rr "
-                + "where( (endTime >= ? and startTime <= ? and status != ? and status != ? ) "
-                + "or (endTime >= ? and startTime <= ? and status != ? ) "
-                + "or (endTime <= ? and startTime >= ? and status != ? ) "
-                + "or (endTime > ?  and status = ? ) )"
+                + "where( (endTime > ? and startTime <= ? and (status = ? or status = ?) ) "
+                + "or (endTime >= ? and startTime < ? and (status = ? or status = ?) ) "
+                + ")"
                 + "group by roomNumber";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, startTime);
             ps.setString(2, startTime);
-            ps.setInt(3, 3);
-            ps.setInt(4, 5);
+            ps.setInt(3, 2);
+            ps.setInt(4, 4);
             ps.setString(5, endTime);
             ps.setString(6, endTime);
-            ps.setInt(7, 5);
-            ps.setString(8, endTime);
-            ps.setString(9, startTime);
-            ps.setInt(10, 5);
-            ps.setString(11, startTime);
-            ps.setInt(12, 3);
+            ps.setInt(7, 2);
+            ps.setInt(8, 4);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(rs.getString("roomNumber"));
@@ -150,26 +146,20 @@ public class BookRoomControl {
             ResultSet rs1 = ps1.executeQuery();
             while (rs1.next()) {
                 String sql = "select roomNumber from room_reservation as rr "
-                        + "where( (endTime >= ? and startTime <= ? and status != ? and status != ?) "
-                        + "or (endTime >= ? and startTime <= ? and status != ?) "
-                        + "or (endTime <= ? and startTime >= ? and status != ?) "
-                        + "or (endTime > ?  and status = ? )) "
+                        + "where( (endTime > ? and startTime <= ? and (status = ? or status = ?) ) "
+                        + "or (endTime >= ? and startTime < ? and (status = ? or status = ?) ) "
+                        + ")"
                         + "and roomNumber = ? "
                         + "group by roomNumber";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, startTime);
                 ps.setString(2, startTime);
-                ps.setInt(3, 3);
-                ps.setInt(4, 5);
+                ps.setInt(3, 2);
+                ps.setInt(4, 4);
                 ps.setString(5, endTime);
                 ps.setString(6, endTime);
-                ps.setInt(7, 5);
-                ps.setString(8, endTime);
-                ps.setString(9, startTime);
-                ps.setInt(10, 5);
-                ps.setString(11, startTime);
-                ps.setInt(12, 3);
-                ps.setString(13, rs1.getString("roomNumber"));
+                ps.setInt(7, 2);
+                ps.setInt(8, 4);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     list.add(rs1.getString("roomNumber"));
@@ -255,7 +245,8 @@ public class BookRoomControl {
         }
         return false;
     }
-    public static int CancellBookRoom(String id_guest, String roomNumber, String dateStart ){
+
+    public static int CancellBookRoom(String id_guest, String roomNumber, String dateStart) {
         java.sql.Connection conn = ConnectionProvider.getConnection();
         String sql = "select * from room_reservation where id_guest = ? and roomNumber = ? and startTime = ? ";
         try {

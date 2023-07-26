@@ -93,7 +93,27 @@ CREATE TABLE `room_reservation` (
   foreign key (`id_guest`) references `guest`(`id_guest`),
   foreign key (`roomNumber`) references `room`(`roomNumber`),
   PRIMARY KEY (`idroom_reservation`));
-
+-- baang dat phong onl qua ung dung ( thonng bao ) 
+drop table if exists `onlineReservation`;
+create table `onlineReservation`(
+	`idor` INT NOT NULL AUTO_INCREMENT,
+    `time` datetime not null,
+    `status` bit default 0 not null, -- da xem hoac chua xem
+    `bookingStatus` bit, -- chap nhan hoac khong chap nhan 
+    `idroom_reservation` int unique,
+    foreign key (`idroom_reservation`) references `room_reservation`(`idroom_reservation`)
+);
+-- bang dat dich vu qua ung dung
+drop table if exists `orderService`;
+create table `orderService`(
+	`idos` INT NOT NULL AUTO_INCREMENT,
+    `time` datetime not null,
+    `status` bit default 0 not null, -- da xem hoac chua xem
+    `orderStatus` bit, -- chap nhan hoac khong chap nhan 
+    `id_ser` varchar(10) not null,
+    `quantityService` int not null,
+    foreign key (`id_ser`) references `service`(`id_ser`)
+);
 -- bảng hóa đơn
 drop table if exists `bill`;
 create table `bill`(
@@ -627,7 +647,7 @@ VALUES
 
 INSERT INTO `testh`.`furniture` (`id_fur`, `name_fur`, `price_fur`, `status_fur`, `roomNumber`) 
 VALUES 
-('FU00296', 'Bàn làm việc', '2000000', '0', '110H1'),
+('FU00296', 'Bàn làm việc', '2000000', '1', '110H1'),
 ('FU00297', 'Bàn làm việc', '2000000', '1', '111H1'),
 ('FU00298', 'Bàn làm việc', '2000000', '1', '112H1'),
 ('FU00299', 'Bàn làm việc', '2000000', '1', '113H1'),
